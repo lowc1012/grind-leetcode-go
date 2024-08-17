@@ -6,15 +6,27 @@
 
 // @lc code=start
 func isPalindrome(x int) bool {
-	s := strconv.Itoa(x)
-	j := len(s)-1
-	for i := 0; i < len(s); i++ {
-		if string(s[i]) != string(s[j]) {
-			return false
-		}
-		j--
+	// Don't need to check negative numbers
+	if x < 0 {
+		return false
 	}
-    return true
+
+	return x == reverse(x)
+}
+
+// reverse reverses the digits of an integer.
+func reverse(x int) int {
+	reversed := 0
+	for x != 0 {
+		// Pop the last digit from x
+		// for example, 123 % 10 = 3
+		// and push it to the end of reversed
+		reversed = reversed*10 + x%10
+
+		// Remove the last digit from x
+		x /= 10
+	}
+	return reversed
 }
 // @lc code=end
 
