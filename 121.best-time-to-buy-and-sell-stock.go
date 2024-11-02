@@ -6,15 +6,22 @@
 
 // @lc code=start
 func maxProfit(prices []int) int {
-    maxProfit := 0
-		minPrice := prices[0]
+	// 1. brute-force
+	// using nested loops to iterate over all possible subarrays
+	// outer loop marks the start point, inner loop marks the end point of subarray
+	// to find the max profix (end - start)
 
-		for i := 1; i < len(prices); i++ {
-			maxProfit = max(prices[i] - minPrice, maxProfit)
-			minPrice = min(minPrice, prices[i])
-		}
+	// 2. kadane's algo
+	maxP := 0
+	minPrice := prices[0]
 
-		return maxProfit
+	for i := 1; i < len(prices); i++ {
+		maxP = max(prices[i]-minPrice, maxP)
+		minPrice = min(minPrice, prices[i])
+	}
+
+	return maxP
 }
+
 // @lc code=end
 
