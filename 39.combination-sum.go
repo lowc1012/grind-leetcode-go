@@ -6,28 +6,41 @@
 
 // @lc code=start
 
+import "sort"
+
 func combinationSum(candidates []int, target int) [][]int {
-	result := make([][]int, 0)
-	backtrack(&result, []int{}, candidates, 0, target)
-	return result
+    // Input validation
+    if len(candidates) == 0 || target <= 0 {
+        return nil
+    }
+
+    // Sort to enable early termination
+    sort.Ints(candidates)
+
+    result := make([][]int, 0)
+    backtrack(&result, make([]int, 0, target/candidates[0]), candidates, 0, target)
+    return result
 }
 
-func backtrack(res *[][]int, track []int, candidates []int, start, target int) {
-	if target < 0 {
-		return
-	}
+func backtrack(result *[][]int, combination []int, candidates []int, start, target int) {
+    if target == 0 {
+        // Create a new slice to avoid modifying the original
+        temp := make([]int, len(combination))
+        copy(temp, combination)
+        *result = append(*result, temp)
+        return
+    }
+    
+    for i := start; i < len(candidates); i++ {
+        // Early termination if candidate is too large
+        if candidates[i] > target {
+            break
+        }
 
-	// desired condition
-	if target == 0 {
-		*res = append(*res, append([]int{}, track...))
-		return
-	}
-
-	for i := start; i < len(candidates); i++ {
-		track = append(track, candidates[i])
-		backtrack(res, track, candidates, i, target-candidates[i])
-		track = track[:len(track)-1]
-	}
+        combination = append(combination, candidates[i])
+        backtrack(result, combination, candidates, i, target - candidates[i])
+        combination = combination[:len(combination)-1]
+    }
 }
 
 // @lc code=end
