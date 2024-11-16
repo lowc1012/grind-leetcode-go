@@ -5,35 +5,29 @@
  */
 
 // @lc code=start
-import "sort"
 
 func combinationSum(candidates []int, target int) [][]int {
-	sort.Ints(candidates)
-
-	res := make([][]int, 0)
-	backtrack(&res, []int{}, candidates, 0, 0, target)
-	return res
+	result := make([][]int, 0)
+	backtrack(&result, []int{}, candidates, 0, target)
+	return result
 }
 
-func backtrack(res *[][]int, track []int, candidates []int, start, currSum, target int) {
-	// end condition
-	if currSum == target {
-		s := make([]int, len(track))
-		copy(s, track)
-		*res = append(*res, s)
+func backtrack(res *[][]int, track []int, candidates []int, start, target int) {
+	if target < 0 {
+		return
+	}
+
+	// desired condition
+	if target == 0 {
+		*res = append(*res, append([]int{}, track...))
+		return
 	}
 
 	for i := start; i < len(candidates); i++ {
-		if (currSum + candidates[i]) > target {
-			break
-		}
 		track = append(track, candidates[i])
-		currSum += candidates[i]
-		backtrack(res, track, candidates, i, currSum, target)
+		backtrack(res, track, candidates, i, target-candidates[i])
 		track = track[:len(track)-1]
-		currSum -= candidates[i]
 	}
-
 }
 
 // @lc code=end
