@@ -33,17 +33,17 @@ func findRelativeRanks(score []int) []string {
 
     // use a HashMap to store the relation between scores(key) and rank(value)
     rankMap := make(map[int]string, len(score))
-    for i := 0; i < n; i++ {
+    for i := 1; i <= n; i++ {
         s := heap.Pop(h).(int)
         switch i {
-        case 0:
-            rankMap[s] = "Gold Medal"
         case 1:
-            rankMap[s] = "Silver Medal"
+            rankMap[s] = "Gold Medal"
         case 2:
+            rankMap[s] = "Silver Medal"
+        case 3:
             rankMap[s] = "Bronze Medal"
         default:
-            rankMap[s] = strconv.Itoa(i + 1)
+            rankMap[s] = strconv.Itoa(i)
         }
     }
 
