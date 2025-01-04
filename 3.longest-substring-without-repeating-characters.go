@@ -5,26 +5,26 @@
  */
 
 // @lc code=start
+// Time Complexity: O(n)
 func lengthOfLongestSubstring(s string) int {
 	// initialize the result
 	res := 0
 
-	// make a set to store the characters
-	set := make(map[byte]struct{})
+	// create a map to store the index of each character
+	m := make(map[byte]int)
 
 	// implement "sliding window"
 	begin, end := 0, 0
 	for end < len(s) {
-		// if the character is already in the set, remove the character at the beginning of the string
-		_, exists := set[s[end]]
-		for exists {
-			delete(set, s[begin])
-			begin++
-			_, exists = set[s[end]]
+
+		// Shrink window from beginning if duplicate found, until no duplicate
+		lastIndex, exists := m[s[end]]
+		if exists && lastIndex >= begin {
+			begin = lastIndex + 1
 		}
 
-		// add the character to the set
-		set[s[end]] = struct{}{}
+		// add the character to the map
+		m[s[end]] = end
 		// update the result
 		res = max(res, end-begin+1)
 		// move the end pointer
