@@ -7,14 +7,16 @@
 // @lc code=start
 func combine(n int, k int) [][]int {
 	res := [][]int{}
-	backtrack([]int{}, &res, 1, n, k)
+	track := make([]int, 0, k)
+	backtrack(track, &res, 1, n, k)
 	return res
 }
 
 func backtrack(curr []int, res *[][]int, start, n, k int) {
 	if k == 0 {
-		result := append([]int{}, curr...)
-		*res = append(*res, result)
+		track := make([]int, len(curr))
+		copy(track, curr)
+		*res = append(*res, track)
 		return
 	}
 

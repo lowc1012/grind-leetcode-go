@@ -6,32 +6,30 @@
 
 // @lc code=start
 func lengthOfLongestSubstring(s string) int {
+	// initialize the result
+	res := 0
 
-	var res int = 0
-	
 	// make a set
 	set := make(map[string]struct{})
 
-	// use two pointer to implement "sliding window"
-	a := 0
-	for i, xk := range s {
-		_, ok := set[string(k)]
-		for ok {
-			delete(set, string(s[a]))
-			a += 1
-			_, ok = set[string(k)]
+	// use two pointers (begin, end) to implement "sliding window"
+	begin := 0
+	for end := 0; end < len(s); end++ {
+		// if the character is already in the set, remove the character at the beginning of the string
+		_, exists := set[string(s[end])]
+		for exists {
+			delete(set, string(s[begin]))
+			begin++
+			_, exists = set[string(end)]
 		}
+
+		// add the character to the set
 		set[string(k)] = struct{}{}
-		res = max(res, i - a + 1)
-	} 
+		// update the result
+		res = max(res, end-begin+1)
+	}
 	return res
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
 // @lc code=end
 

@@ -6,13 +6,17 @@
 
 // @lc code=start
 func maxSubArray(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
 	// Kadane’s Algorithm
-	currentSum := 0
+	// find the maximum sum among all subarrays ending at that element. 
+	currentSum := nums[0]
 	maxSum := nums[0]
-	
-	for i := 0; i < len(nums); i++ {
-		currentSum = max(currentSum, 0)
-		currentSum += nums[i]
+
+	for i := 1; i < len(nums); i++ {
+		currentSum = max(currentSum + nums[i], nums[i])
 		maxSum = max(currentSum, maxSum)
 	}
 

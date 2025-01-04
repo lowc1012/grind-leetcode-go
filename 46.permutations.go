@@ -8,24 +8,24 @@
 
 // TC: O(N!)
 func permute(nums []int) [][]int {
+	// nums = [1, 2, 3]
 	res := make([][]int, 0)
-	backtrack(&res, 0, nums)
+	backtrack(&res, nums, 0)
 	return res
 }
 
-func backtrack(res *[][]int, index int, nums []int) {
-
-	if index == len(nums) {
-		s := make([]int, len(nums))
-		copy(s, nums)
-		*res = append(*res, s)
+func backtrack(res *[][]int, track []int, index int) {
+	if len(track) == index {
+		t := make([]int, index)
+		copy(t, track)
+		*res = append(*res, track)
+		return
 	}
 
-	// walk through nums, and swap two of elements in nums
-	for i := index; i < len(nums); i++ {
-		nums[i], nums[index] = nums[index], nums[i]
-		backtrack(res, index+1, nums)
-		nums[i], nums[index] = nums[index], nums[i]
+	for i := index; i < len(track); i++ {
+		track[i], track[index] = track[index], track[i]
+		backtrack(res, track, index+1)
+		track[i], track[index] = track[index], track[i]
 	}
 }
 

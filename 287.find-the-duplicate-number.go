@@ -8,7 +8,7 @@
 func findDuplicate(nums []int) int {
 	// example: [1, 3, 4, 2, 2]
 	// Binary search
-	start, end := 1, len(nums) - 1
+	start, end := 1, len(nums) - 1 // [1, 4]
 
 	for start < end {
 		// guess the middle number is the duplicated

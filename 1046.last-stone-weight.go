@@ -33,13 +33,15 @@ func (h *IntHeap) Pop() interface{} {
 	return x
 }
 
+// Time Complexity: O(NlogN)
+// Space Complexity: O(N)
 func lastStoneWeight(stones []int) int {
 
-	// Build a Max-Heap, O(nlogn)
+	// Build a Max-Heap, O(NlogN)
 	h := &IntHeap{}
-	heap.Init(h)
+	heap.Init(h) // O(N)
 	for _, v := range stones {
-		heap.Push(h, v)
+		heap.Push(h, v) // O(logN)
 	}
 
 	// Find the heavist two stones

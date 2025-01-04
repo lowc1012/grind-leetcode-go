@@ -22,19 +22,23 @@ func (h *MinHeap) Pop() interface{} {
     return x
 }
 
+// Time complexity: O(NlogN)
+// Space complexity: O(N)
 func findRelativeRanks(score []int) []string {
     n := len(score)
     // Use minimum heap to store all scores
+    // time complexity: O(NlogN)
     h := &MinHeap{}
     for _, s := range score {
-        heap.Push(h, s)
+        heap.Push(h, s) // O(logN) time
     }
-    heap.Init(h)
+    heap.Init(h) // O(N) space
 
     // use a HashMap to store the relation between scores(key) and rank(value)
-    rankMap := make(map[int]string, len(score))
+    // time complexity: O(NlogN)
+    rankMap := make(map[int]string, len(score)) // O(N) space
     for i := 1; i <= n; i++ {
-        s := heap.Pop(h).(int)
+        s := heap.Pop(h).(int) // O(logN)
         switch i {
         case 1:
             rankMap[s] = "Gold Medal"
@@ -48,7 +52,8 @@ func findRelativeRanks(score []int) []string {
     }
 
     // iterate score to retrieve the result
-    result := make([]string, n)
+    // O(N)
+    result := make([]string, n) // O(N) space
     for i, j := range score {
         result[i] = rankMap[j]
     }

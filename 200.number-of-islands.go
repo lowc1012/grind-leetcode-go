@@ -20,7 +20,8 @@ func numIslands(grid [][]byte) int {
 }
 
 // what if the matrix is too large?
-// we can use a stack to simulate the recursive call to avoid deep recursion
+// we can use a stack to simulate the recursive call to avoid deep recursion (overhead)
+// (or we can use a queue to simulate the BFS)
 
 // iterative DFS to mark the connected land cells as visited
 func dfs(grid [][]byte, m, n int) {

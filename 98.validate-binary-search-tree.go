@@ -13,20 +13,25 @@
  *     Right *TreeNode
  * }
  */
+
+import (
+	"math"
+)
+
 func isValidBST(root *TreeNode) bool {
-	return validate(root, nil, nil)
+	return validate(root, math.Inf(-1), math.Inf(1))
 }
 
-func validate(node *TreeNode, max, min *int) bool {
+func validate(node *TreeNode, min, max float64) bool {
 	if node == nil {
 		return true
 	}
 
-	if (max != nil && node.Val >= *max) || (min != nil && node.Val <= *min) {
+	if (float64(node.Val) >= max) || (float64(node.Val) <= min) {
 		return false
 	}
 
-	return validate(node.Left, &(node.Val), min) && validate(node.Right, max, &(node.Val))
+	return validate(node.Left, min, float64(node.Val)) && validate(node.Right, float64(node.Val), max)
 }
 
 // @lc code=end
