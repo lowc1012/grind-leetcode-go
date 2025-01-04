@@ -9,24 +9,26 @@ func lengthOfLongestSubstring(s string) int {
 	// initialize the result
 	res := 0
 
-	// make a set
-	set := make(map[string]struct{})
+	// make a set to store the characters
+	set := make(map[byte]struct{})
 
-	// use two pointers (begin, end) to implement "sliding window"
-	begin := 0
-	for end := 0; end < len(s); end++ {
+	// implement "sliding window"
+	begin, end := 0, 0
+	for end < len(s) {
 		// if the character is already in the set, remove the character at the beginning of the string
-		_, exists := set[string(s[end])]
+		_, exists := set[s[end]]
 		for exists {
-			delete(set, string(s[begin]))
+			delete(set, s[begin])
 			begin++
-			_, exists = set[string(end)]
+			_, exists = set[s[end]]
 		}
 
 		// add the character to the set
-		set[string(k)] = struct{}{}
+		set[s[end]] = struct{}{}
 		// update the result
 		res = max(res, end-begin+1)
+		// move the end pointer
+		end++
 	}
 	return res
 }
