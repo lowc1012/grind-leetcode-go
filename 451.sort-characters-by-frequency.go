@@ -5,22 +5,30 @@
  */
 
 // @lc code=start
-import "sort"
+import "strings"
 
 func frequencySort(s string) string {
-	r := []rune(s)
-	m := make(map[rune]int)
-	for _, v := range r {
-		m[v]++
+	// use bucket sort
+	freqMap := make(map[rune]int, 0)
+	for _, ch := range s {
+		freqMap[ch]++
 	}
 
-	sort.Slice(r, func(a, b int) bool {
-		if m[r[a]] == m[r[b]] {
-			return r[a] > r[b]
+	// create a bucket to store the frequency of each character
+	bucket := make([][]rune, len(s)+1)
+
+	for ch, freq := range freqMap {
+		bucket[freq] = append(bucket[freq], ch)
+	}
+
+	var res strings.Builder
+	for i := len(bucket)-1; i > 0; i-- {
+		for _, ch := range bucket[i] {
+			res.WriteString(strings.Repeat(string(ch), i))
 		}
-		return m[r[a]] > m[r[b]]
-	})
-	return string(r)
+	}
+
+	return res.String()
 }
 
 // @lc code=end
