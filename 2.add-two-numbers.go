@@ -13,12 +13,12 @@
  * }
  */
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-    dummyNode := &ListNode{
+  dummyNode := &ListNode{
 		Val: 0,
 	}
 
 	cursor := dummyNode
-	carry := 0 // 0 or 1
+	carry := 0
 	for l1 != nil || l2 != nil {
 		x, y := 0, 0
 
@@ -34,18 +34,19 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 
 		sum := x + y + carry
 		carry = sum / 10
-
 		cursor.Next = &ListNode{
 			Val: sum % 10,
 		}
 		cursor = cursor.Next
 	}
 
+	// Final carry handling
 	if carry > 0 {
 		cursor.Next = &ListNode{
 			Val: carry,
 		}
 	}
+	// Return the next node of dummyNode
 	return dummyNode.Next
 }
 // @lc code=end
