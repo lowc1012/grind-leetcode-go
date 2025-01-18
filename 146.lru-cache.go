@@ -4,8 +4,9 @@
  * [146] LRU Cache
  */
 
-// @lc code=start
+import "container/list"
 
+// @lc code=start
 
 // Use a HashMap + doubly-linked list (container/list) to implement cache
 
@@ -17,68 +18,43 @@
 // }
 
 type Pair struct {
-	Key int
-	Val int
+	key   int
+	value int
 }
 
 type LRUCache struct {
-	l        *list.List
-	m        map[int]*list.Element
 	capacity int
+	cache    map[int]*list.Element
+	lruList  *list.List
 }
 
 func Constructor(capacity int) LRUCache {
 	return LRUCache{
-		list.New(),
-		make(map[int]*list.Element, capacity),
-		capacity,
+		capacity: capacity,
+		cache:    make(map[int]*list.Element),
+		lruList:  list.New(),
 	}
 }
 
 func (this *LRUCache) Get(key int) int {
-	if node, exsit := this.m[key]; exsit {
-		// move the node to front
-		this.l.MoveToFront(node)
-		return node.Value.(*list.Element).Value.(Pair).Val
+	if ele, exist := this.cache[key]; exist {
+		this.lruList.MoveToFront(ele)
+		return ele.Value.(Pair).value
 	}
 	return -1
 }
 
 func (this *LRUCache) Put(key int, value int) {
-	// if cache hit
-	if node, exsit := this.m[key]; exsit {
-		// update the value of this node
-		p := node.Value.(*list.Element).Value = Pair{
-			key,
-			value,
-		}
-		// move the node to front
-		this.l.MoveToFront(node)
-
-		// if cache miss
+	if ele, exist := this.cache[key]; exist {
+		this.lruList.MoveToFront(ele)
+		ele.Value = Pair{key, value}
 	} else {
-
-		// push the new node into list, PushFront returns *Element
-		ptr := this.l.PushFront(&list.Element{
-			Value: Pair{
-				Key: key,
-				Val: value,
-			},
-		})
-
-		// add the new item into map
-		this.m[key] = ptr
-
-		// if cache is overflow
-		if this.l.Len() > this.capacity {
-			// find the last node we want to delete
-			lastKey := this.l.Back().Value.(*list.Element).Value.(Pair).Key
-			// delete the item in map
-			delete(this.m, lastNode.Key)
-
-			// delete the node
-			this.l.Remove(this.l.Back())
+		if len(this.cache) >= this.capacity {
+			theOldest := this.lruList.Back()
+			delete(this.cache, theOldest.Value.(Pair).key)
+			this.lruList.Remove(theOldest)
 		}
+		this.cache[key] = this.lruList.PushFront(Pair{key, value})
 	}
 }
 
