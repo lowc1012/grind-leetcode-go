@@ -13,21 +13,38 @@
  * }
  */
 func isPalindrome(head *ListNode) bool {
-    nums := make([]int, 0)
-
-	for head != nil {
-		nums = append(nums, head.Val)
-		head = head.Next
+	if head == nil {
+		return true
 	}
 
-	j := len(nums)-1
-	for i := 0; i < len(nums)/2; i++ {
-		if nums[i] != nums[j] {
+	// find the middle of the linked list
+	slow, fast := head, head
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+
+	secondHalf := reverse(slow)
+
+	for head != nil && secondHalf != nil {
+		if head.Val != secondHalf.Val {
 			return false
 		}
-		j--
+		head = head.Next
+		secondHalf = secondHalf.Next
 	}
 	return true
+}
+
+func reverse(head *ListNode) *ListNode {
+	var prev *ListNode
+	for head != nil {
+		next := head.Next
+		head.Next = prev
+		prev = head
+		head = next
+	}
+	return prev
 }
 // @lc code=end
 
