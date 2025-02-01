@@ -18,21 +18,8 @@ func insert(intervals [][]int, newInterval []int) [][]int {
 			b = max(b, interval[1])
 		}
 	}
-	return append(append(l, []int{a, b}), r...)
-}
-
-func max(a, b int) int {
-	if a < b {
-		return b
-	}
-	return a
-}
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+	l = append(l, []int{a, b})
+	return append(l, r...)
 }
 
 // @lc code=end
