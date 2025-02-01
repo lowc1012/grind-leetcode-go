@@ -6,28 +6,30 @@
 
 // @lc code=start
 func sortColors(nums []int) {
-	white, blue := 0, 0
-	counter := 0
-
+	red, white, blue := 0, 0, 0
 	for _, n := range nums {
-		if n == 0 {
-			nums[counter] = 0
-			counter++
-		} else if n == 1 {
+		switch n {
+		case 0:
+			red++
+		case 1:
 			white++
-		} else {
+		default:
 			blue++
 		}
 	}
 
-	for i := 0; i < white; i++ {
-		nums[counter] = 1
-		counter++
+	curr := 0
+	for i := 0; i < red; i++ {
+		nums[curr] = 0
+		curr++
 	}
-
+	for i := 0; i < white; i++ {
+		nums[curr] = 1
+		curr++
+	}
 	for i := 0; i < blue; i++ {
-		nums[counter] = 2
-		counter++
+		nums[curr] = 2
+		curr++
 	}
 }
 
