@@ -11,32 +11,30 @@ import (
 )
 
 func groupAnagrams(strs []string) [][]string {
-	result := [][]string{}
-	m := make(map[string][]string)
+	res := make([][]string, 0)
+	anagrams := make(map[string][]string)
+
 	for _, str := range strs {
-		intSlice := make([]int, 26)
-		for _, r := range str {
-			intSlice[int(r-'a')]++
+		charCount := [26]int{}
+		for _, ch := range str {
+			charCount[ch-'a']++
 		}
-		// convert integer slice to string
-		valuesText := []string{}
-		for _, i := range intSlice {
-			valuesText = append(valuesText, strconv.Itoa(i))
+		// generate a key as identifier
+		var sb strings.Builder
+		for _, c := range charCount {
+			sb.WriteString(strconv.Itoa(c))
+			// Adding a separator for clarity (this avoids ambiguity between counts like "1" and "10")
+			sb.WriteString("#")
 		}
+		key := sb.String()
 
-		keyString := strings.Join(valuesText, "")
-		if _, exist := m[keyString]; !exist {
-			m[keyString] = make([]string, 0)
-		}
-
-		m[keyString] = append(m[keyString], str)
+		anagrams[key] = append(anagrams[key], str)
 	}
 
-	for _, mapEntry := range m {
-		result = append(result, mapEntry)
+	for _, entry := range anagrams {
+		res = append(res, entry)
 	}
-
-	return result
+	return res
 }
 
 // @lc code=end
