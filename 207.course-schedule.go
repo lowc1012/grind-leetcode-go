@@ -10,26 +10,26 @@
 func detectCycle(graph [][]int, state []int, curr int) bool {
 
 	if state[curr] == 1 {
-		// detected cycle
+		// detected cycle because there is a "back edge"
 		return true
 	}
 
 	if state[curr] == 2 {
+		// early-termination
 		// the node is finished checking cycle with all adajacent nodes
 		return false
 	}
 
-	// Mark as being visited (part of current DFS path)
+	// Mark the node as being visited
 	state[curr] = 1
 
 	for _, neibor := range graph[curr] {
 		if detectCycle(graph, state, neibor) {
 			return true
 		}
-
 	}
 
-	// mart current node visied
+	// mark current node visited fully
 	state[curr] = 2
 
 	return false
