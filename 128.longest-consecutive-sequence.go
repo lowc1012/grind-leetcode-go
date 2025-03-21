@@ -5,35 +5,28 @@
  */
 
 // @lc code=start
-import "github.com/emirpasic/gods/sets/hashset"
-
 func longestConsecutive(nums []int) int {
-	s := hashset.New()
-	for _, v := range nums {
-		s.Add(v)
+	m := make(map[int]bool)
+	for _, num := range nums {
+		m[num] = true
 	}
+	
+	result := 0
+	for num := range m {
+		// check if a start of a sequence
+		if exist := m[num-1]; !exist {
+			curr := num
+			currStreak := 1
 
-	longestLen := 0
-	for _, v := range s.Values() {
-		if !s.Contains(v.(int) - 1) {
-			current := v.(int)
-			currentLen := 1
-			for s.Contains(current + 1) {
-				current += 1
-				currentLen += 1
+			for m[curr+1] {
+				curr++
+				currStreak++
 			}
-			longestLen = max(longestLen, currentLen)
+
+			result = max(result, currStreak)
 		}
 	}
-
-	return longestLen
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return result
 }
 
 // @lc code=end
