@@ -11,6 +11,8 @@ func isPalindrome(x int) bool {
 		return false
 	}
 
+	// The time complexity is O(log(n)), where n is the input number.
+	// This is because we process each digit of the number once.
 	return x == reverse(x)
 }
 
