@@ -7,44 +7,35 @@
 // @lc code=start
 
 func lengthOfLIS(nums []int) int {
-	return tabulation(nums, len(nums))
-}
+	// Dynamic Programming
+    if len(nums) == 0 {
+        return 0
+    }
 
-func tabulation(s []int, n int) int {
-	// create a cache to store the LIS values
-	// for ith element in input array
-	// SC: O(n)
-	cache := make([]int, n)
-	for i := 0; i < n; i++ {
-		cache[i]++
-	}
+    // Init DP state
+    dp := make([]int, len(nums))
+    for i := range dp {
+        dp[i] = 1 // LIS is at least one
+    }
 
-	// Compute the LIS values in bottom-up manner
-	// TC: O(log n*n)
-	for i := 1; i < n; i++ {
-		for j := 0; j < i; j++ {
-			// if number increase && cache table need updated
-			if s[i] > s[j] {
-				cache[i] = max(cache[i], cache[j]+1)
-			}
-		}
-	}
+    // Recurrence Relation
+    for i := 1; i < len(nums); i++ {
+        for j := 0; j < i; j++ {
+            if nums[i] > nums[j] {
+            dp[i] = max(dp[i], dp[j]+1)
+        }
+        }
+    }
 
-	max := 1
-	for _, v := range cache {
-		if max < v {
-			max = v
-		}
-	}
+    // Find the final result
+    maxLength := 1
+    for _, v := range dp {
+        if v > maxLength {
+            maxLength = v
+        }
+    }
 
-	return max
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+    return maxLength
 }
 
 // @lc code=end
