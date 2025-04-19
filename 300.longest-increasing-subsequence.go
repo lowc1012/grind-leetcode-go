@@ -19,22 +19,19 @@ func lengthOfLIS(nums []int) int {
 	}
 
 	// Recurrence Relation
-    // For each element at index i (from 1 to n-1), compare it with all elements before it (from 0 to i-1).
-    // If nums[j] < nums[i] (where j ranges from 0 to i-1), it means the element at index i can be a part of a longer subsequence.
+	// For each element at index i (from 1 to n-1), compare it with all elements before it (from 0 to i-1).
+	// If nums[j] < nums[i] (where j ranges from 0 to i-1), it means the element at index i can be a part of a longer subsequence.
+	maxLength := 1
 	for i := 1; i < len(nums); i++ {
 		for j := 0; j < i; j++ {
-            // increasing
+			// increasing
 			if nums[i] > nums[j] {
 				dp[i] = max(dp[i], dp[j]+1)
 			}
-		}
-	}
-
-	// Find the final result
-	maxLength := 1
-	for _, v := range dp {
-		if v > maxLength {
-			maxLength = v
+            // find the result
+			if dp[i] > maxLength {
+				maxLength = dp[i]
+			}
 		}
 	}
 
