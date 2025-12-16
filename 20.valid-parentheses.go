@@ -6,35 +6,25 @@
 
 // @lc code=start
 func isValid(s string) bool {
-	var stack []rune
-	for _, r := range s {
-		if r == '[' || r == '{' || r == '(' {
-			stack = append(stack, r)
-		} else {
-			if len(stack) == 0 {
-				return false
-			}
+	bracketMap := map[rune]rune{
+        '}': '{',
+        ']': '[',
+        ')': '(',
+    }
 
-			if r != ')' && stack[len(stack)-1] == '(' {
-				return false
-			}
-
-			if r != '}' && stack[len(stack)-1] == '{' {
-				return false
-			}
-
-			if r != ']' && stack[len(stack)-1] == '[' {
-				return false
-			}
-
-			stack = stack[:len(stack)-1]
-		}
-	}
-
-	if len(stack) == 0 {
-		return true
-	}
-    return false
+    stack := make([]rune, 0)
+    for _, r := range s {
+        switch r {
+            case '}', ']', ')':
+                if len(stack) == 0 || stack[len(stack)-1] != bracketMap[r] {
+                    return false
+                }
+                stack = stack[:len(stack)-1]
+            default:
+                stack = append(stack, r)
+        }
+    }
+    return len(stack) == 0
 }
 // @lc code=end
 
