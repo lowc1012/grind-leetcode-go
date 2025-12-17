@@ -18,7 +18,7 @@ func backtrack(res *[][]int, track []int, index int) {
 	if len(track) == index {
 		t := make([]int, index)
 		copy(t, track)
-		*res = append(*res, track)
+		*res = append(*res, t)
 		return
 	}
 
