@@ -6,26 +6,26 @@
 
 // @lc code=start
 func combine(n int, k int) [][]int {
-	res := [][]int{}
-	track := make([]int, 0, k)
-	backtrack(track, &res, 1, n, k)
-	return res
+	res := make([][]int, 0)
+    backtrack(&res, []int{}, 1, n, k)
+    return res
 }
 
-func backtrack(curr []int, res *[][]int, start, n, k int) {
-	if k == 0 {
-		track := make([]int, len(curr))
-		copy(track, curr)
-		*res = append(*res, track)
-		return
-	}
+func backtrack(res *[][]int, track []int, start, n, k int) {
+    // end condition
+    if k == 0 {
+        t := make([]int, len(track))
+        copy(t, track)
+        *res = append(*res, t)
+        return
+    }
 
-	for i := start; i <= n; i++ {
-		curr = append(curr, i)
-		backtrack(curr, res, i+1, n, k-1)
-		curr = curr[:len(curr)-1]
-	}
-	return
+    // recursive exploration
+    for i := start; i <= n; i++ {
+        track = append(track, i)
+        backtrack(res, track, i+1, n, k-1)
+        track = track[:len(track)-1]
+    }
 }
 
 // @lc code=end
