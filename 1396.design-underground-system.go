@@ -5,28 +5,36 @@
  */
 
 // @lc code=start
-type Record struct {
-	startStation string
-	time         int
+type UndergroundSystem struct {
+	checkIns map[int]checkInRecord
+	routes   map[route]routeStats
 }
 
-type UndergroundSystem struct {
-	passenger map[int]Record
+type checkInRecord struct {
+	station string
+	time    int
+}
 
-	// key: pair of (start station, end station)
-	// value: [record of travel time, total travel counter]
-	trafficRecord map[[2]string][2]int
+type route struct {
+	from string
+	to   string
+}
+
+type routeStats struct {
+	totalTime int
+	count     int
 }
 
 func Constructor() UndergroundSystem {
 	return UndergroundSystem{
-		make(map[int]Record),
-		make(map[[2]string][2]int),
+		checkIns: make(map[int]checkInRecord),
+		routes:   make(map[route]routeStats),
 	}
 }
 
 func (this *UndergroundSystem) CheckIn(id int, stationName string, t int) {
-	this.passenger[id] = Record{
+	// record check-in event
+	this.checkIns[id] = checkInRecord{
 		stationName,
 		t,
 	}
@@ -34,30 +42,33 @@ func (this *UndergroundSystem) CheckIn(id int, stationName string, t int) {
 }
 
 func (this *UndergroundSystem) CheckOut(id int, stationName string, t int) {
-	// update current traversal into corresponding traffic record
-	latestRecord := this.passenger[id]
-	startStation, startTime := latestRecord.startStation, latestRecord.time
+	// look up latest check-in for id
+	c := this.checkIns[id]
+	fromStation, startTime := c.station, c.time
 
-	endStation, endTime := stationName, t
+	// record route data
+	r := route{
+		from: fromStation,
+		to:   stationName,
+	}
 
-	trafficKey := [2]string{startStation, endStation}
-
-	// get prev total travel time and prev total traverl counter
-	prevTraffic := this.trafficRecord[trafficKey]
-	prevTraverlTimeSum, prevTraverlCounter := prevTraffic[0], prevTraffic[1]
-
-	this.trafficRecord[trafficKey] = [2]int{prevTraverlTimeSum + (endTime - startTime), prevTraverlCounter + 1}
+	// retrieve and update route stats data
+	stats := this.routes[r]
+	stats.totalTime += (t - startTime)
+	stats.count += 1
+	this.routes[r] = stats
 
 	return
 }
 
 func (this *UndergroundSystem) GetAverageTime(startStation string, endStation string) float64 {
-	// get latest traffic info from station pair
-	trafficInfo := this.trafficRecord[[2]string{startStation, endStation}]
-
-	totalTraverlTime, totalTraverlCounter := trafficInfo[0], trafficInfo[1]
-
-	return float64(totalTraverlTime) / float64(totalTraverlCounter)
+    // retrieve route stats
+    r := route{
+        startStation,
+        endStation,
+    }
+    stats := this.routes[r]
+    return float64(stats.totalTime) / float64(stats.count)
 }
 
 /**
