@@ -6,35 +6,25 @@
 
 // @lc code=start
 
+import "container/heap"
+
 type IntHeap []int
 
-// implement sort interface
-func (h IntHeap) Len() int {
-	return len(h)
-}
-
-func (h IntHeap) Less(i, j int) bool {
-	return h[i] < h[j]
-}
-
-func (h IntHeap) Swap(i, j int) {
-	h[i], h[j] =  h[j], h[i]
-}
-
-func (h *IntHeap) Push(x interface{}) {
-	*h = append(*h, x.(int))
-}
-
+// ------ memorize this implementation
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
 func (h *IntHeap) Pop() interface{} {
-	old := *h
-	x := old[len(old)-1]
-	*h = old[0:len(old)-1]
+	x := (*h)[len(*h)-1]
+	*h = (*h)[:len(*h)-1]
 	return x
 }
+// ------ memorize this implementation
 
 type KthLargest struct {
-    Items *IntHeap
-	K int
+	h *IntHeap
+	k int
 }
 
 func Constructor(k int, nums []int) KthLargest {
@@ -42,27 +32,22 @@ func Constructor(k int, nums []int) KthLargest {
 	heap.Init(h)
 	for _, n := range nums {
 		heap.Push(h, n)
+        // keep the num of items in heap equals to `k`
+        // we remain top 3 largest items in the heap
+        // (because each `Pop` remove the smallest from heap)
+		if h.Len() > k {
+			heap.Pop(h)
+		}
 	}
-
-	// remove the smaller elements
-	for len(*h) > k {
-		heap.Pop(h)
-	}
-
-	return KthLargest{
-		h,
-		k,
-	}
+	return KthLargest{h, k}
 }
 
 func (this *KthLargest) Add(val int) int {
-	if len(*this.Items) < this.K {
-		heap.Push(this.Items, val)
-	} else if val > (*this.Items)[0] {
-		heap.Push(this.Items, val)
-		heap.Pop(this.Items)
+	heap.Push(this.h, val)
+	if this.h.Len() > this.k {
+		heap.Pop(this.h)
 	}
-	return (*this.Items)[0]
+	return (*this.h)[0]
 }
 
 /**
