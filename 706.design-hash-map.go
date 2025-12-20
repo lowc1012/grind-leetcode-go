@@ -6,87 +6,66 @@
 
 // @lc code=start
 type Node struct {
-	key  int
-	val  int
-	next *Node
+	key, val int
+	next     *Node
 }
 
 type MyHashMap struct {
-	items []*Node
-	size  int
+	buckets []*Node
 }
 
 func Constructor() MyHashMap {
-	size := 1000
-	return MyHashMap{
-		make([]*Node, size),
-		size,
-	}
+	return MyHashMap{make([]*Node, 1000)}
 }
 
-func (this *MyHashMap) Put(key int, value int) {
-	index := key % this.size
-	if this.items[index] == nil {
-		this.items[index] = &Node{
-			key: key,
-			val: value,
-		}
+func (m *MyHashMap) hash(key int) int {
+	return key % len(m.buckets)
+}
+
+func (m *MyHashMap) Put(key, value int) {
+	idx := m.hash(key)
+    // new node in the bucket
+	if m.buckets[idx] == nil {
+		m.buckets[idx] = &Node{key, value, nil}
 		return
 	}
 
-	item := this.items[index]
-	for item != nil {
-		if item.key == key {
-			item.val = value
+	for node := m.buckets[idx]; ; node = node.next {
+		if node.key == key {
+			node.val = value
 			return
 		}
-
-		if item.next == nil {
-			item.next = &Node{key: key, val: value}
+		if node.next == nil {
+			node.next = &Node{key, value, nil}
 			return
 		}
-
-		item = item.next
 	}
 }
 
-func (this *MyHashMap) Get(key int) int {
-	index := key % this.size
-	if this.items[index] == nil {
-		return -1
-	}
-
-	item := this.items[index]
-
-	for item != nil {
-		if item.key == key {
-			return item.val
+func (m *MyHashMap) Get(key int) int {
+	for node := m.buckets[m.hash(key)]; node != nil; node = node.next {
+		if node.key == key {
+			return node.val
 		}
-
-		item = item.next
 	}
-
 	return -1
 }
 
-func (this *MyHashMap) Remove(key int) {
-	index := key % this.size
-	if this.items[index] == nil {
+func (m *MyHashMap) Remove(key int) {
+	idx := m.hash(key)
+	if m.buckets[idx] == nil {
 		return
-	} else {
+	}
 
-		if this.items[index].key == key {
-			this.items[index] = this.items[index].next
+	if m.buckets[idx].key == key {
+		m.buckets[idx] = m.buckets[idx].next
+		return
+	}
+
+	for node := m.buckets[idx]; node.next != nil; node = node.next {
+		if node.next.key == key {
+			node.next = node.next.next
 			return
-		}
-
-		item := this.items[index]
-		for item.next != nil {
-			if item.next.key == key {
-				item.next = item.next.next
-				return
-			}
-			item = item.next
 		}
 	}
 }
