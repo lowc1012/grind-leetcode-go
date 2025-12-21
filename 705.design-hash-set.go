@@ -6,31 +6,66 @@
 
 // @lc code=start
 
+type Node struct {
+    key  int
+    next *Node
+}
+
 type MyHashSet struct {
-	items map[int]struct{}
+    set *Node
 }
 
 func Constructor() MyHashSet {
-	return MyHashSet{
-		make(map[int]struct{}),
-	}
+    return MyHashSet{
+        set: nil,
+    }
 }
 
 func (this *MyHashSet) Add(key int) {
-	if _, exist := this.items[key]; !exist {
-		this.items[key] = struct{}{}
-	}
+    if this.set == nil {
+        this.set = &Node{
+            key: key,
+            next: nil,
+        }
+        return
+    }
+    for node := this.set; ; node = node.next {
+        if node.key == key {
+            break
+        }
+        if node.next == nil {
+            node.next = &Node{
+                key: key,
+                next: nil,
+            }
+            return
+        }
+    }
 }
 
 func (this *MyHashSet) Remove(key int) {
-	if _, exist := this.items[key]; exist {
-		delete(this.items, key)
-	}
+    if this.set == nil {
+        return
+    }
+    if node := this.set; node.key == key {
+        this.set = node.next
+        return
+    }
+    for node := this.set; node.next != nil; node = node.next {
+        if node.next.key == key {
+            node.next = node.next.next
+            return
+        }
+    }
 }
 
 func (this *MyHashSet) Contains(key int) bool {
-	_, exist := this.items[key]
-	return exist
+    for node := this.set; node != nil ; node = node.next {
+        if node.key == key {
+            return true
+        }
+    }
+    return false
 }
 
 /**
